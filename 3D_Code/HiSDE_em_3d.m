@@ -1,4 +1,33 @@
-function new_param = gp_sde_em_ay(Z,data,init_param,cur_param)
+function new_param = HiSDE_em_3d(Z, data, init_param, cur_param)
+% gp_sde_em_ay  Perform one EM update for the multivariate (3D) GP-SDE model
+%
+%   new_param = gp_sde_em_ay(Z, data, init_param, cur_param)
+%
+%   Inputs:
+%     Z          – observed time series vector (length K)
+%     data       – struct from SMC step containing:
+%                    • Xs   – [sample×3×(K+1)] latent increments
+%                    • Ys   – [sample×3×(K+1)] integrator trajectories
+%                    • Ms   – [sample×3×max_events] marks per event per dimension
+%                    • Ts   – [sample×max_events] event times (τ_i)
+%                    • Cntr – [sample×1] number of events per particle
+%     init_param – struct of fixed hyperparameters:
+%                    • gam_a0,b0,c0,d0 – Gamma‐prior for waiting times
+%                    • norm_mu0,k0,phi,v0 – Normal‐Inverse‐Wishart prior for initial state and marks
+%                    • dt, sample      – time‐step size and number of particles
+%     cur_param  – struct of current EM parameters:
+%                    • x_mu0, x_var0   – prior mean & covariance for X(0)
+%                    • y_mu0, y_var0   – prior mean & covariance for Y(0)
+%                    • mark_mean, mark_var – per‐event posterior mean & covariance of marks
+%                    • gam_alpha, gam_beta – per‐event posterior Gamma shape & scale
+%
+%   Output:
+%     new_param  – struct containing updated EM parameters, same fields as cur_param:
+%                    • x_mu0, x_var0
+%                    • y_mu0, y_var0
+%                    • mark_mean, mark_var
+%                    • gam_alpha, gam_beta
+%                    • event_cnt       – updated number of inferred events
 
 %% take data out
 Xs = data.Xs ;
